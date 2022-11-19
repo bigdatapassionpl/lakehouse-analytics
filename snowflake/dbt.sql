@@ -15,7 +15,7 @@ create role dbt_role;
 
 drop user if exists dtb_user;
 create or replace user dbt_user
-    password='94cuZpacAnv8nMQ'
+    password='*****************'
     default_role = dbt_role
     must_change_password = false;
 
