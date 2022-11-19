@@ -4,7 +4,7 @@ services:
 
   jupyterlab-dataops:
     container_name: jupyterlab-dataops
-    image: gcr.io/getindata-images-public/jupyterlab-dataops:bigquery-1.0.5
+    image: gcr.io/getindata-images-public/jupyterlab-dataops:latest
     volumes:
     - ./:/home/jovyan/projects/lakehouse-analytics/:rw
     ports:
