@@ -1,0 +1,14 @@
+version: '3.5'
+
+services:
+
+  jupyterlab-dataops:
+    container_name: jupyterlab-dataops
+    image: gcr.io/getindata-images-public/jupyterlab-dataops:bigquery-1.0.5
+    volumes:
+    - ./:/home/jovyan/projects/lakehouse-analytics/:rw
+    ports:
+    - "8888:8888"
+    stdin_open: true
+    tty: true
+    hostname: localhost
