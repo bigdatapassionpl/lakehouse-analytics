@@ -1,2 +1,6 @@
 
+.idea
+
 .ipynb_checkpoints
+
+dbt-snowflake-venv
