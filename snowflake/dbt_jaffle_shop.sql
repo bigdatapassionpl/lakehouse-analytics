@@ -1,8 +1,5 @@
 use role accountadmin;
 
-drop database if exists dbt_raw;
-drop database if exists dbt_analytics;
-
 create database dbt_raw;
 create database dbt_analytics;
 
@@ -13,8 +10,10 @@ grant ownership on database dbt_raw to role dbt_role;
 grant ownership on database dbt_analytics to role dbt_role;
 grant ownership on schema dbt_raw.jaffle_shop to role dbt_role;
 grant ownership on schema dbt_raw.stripe to role dbt_role;
+grant ownership on schema dbt_analytics.public to role dbt_role;
 
 use role dbt_role;
+use warehouse dbt_wh;
 
 create table dbt_raw.jaffle_shop.customers
 ( id integer,
@@ -70,6 +69,6 @@ file_format = (
 --grant ownership on all tables in schema dbt_raw.stripe to role dbt_role;
 
 
-select * from dbt_raw.jaffle_shop.customers;
-select * from dbt_raw.jaffle_shop.orders;
-select * from dbt_raw.stripe.payment;
+select * from dbt_raw.jaffle_shop.customers limit 1;
+select * from dbt_raw.jaffle_shop.orders limit 1;
+select * from dbt_raw.stripe.payment limit 1;
