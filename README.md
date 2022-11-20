@@ -16,4 +16,10 @@ dbt --version
 ~~~
 snowsql -v
 snowsql -a <account_name> -u <login_name>
+
+export SNOW_CONNECTION=**********
+
+snowsql -c $SNOW_CONNECTION -f snowflake/dbt_clean.sql
+snowsql -c $SNOW_CONNECTION -f snowflake/dbt_init.sql
+snowsql -c $SNOW_CONNECTION -f snowflake/dbt_jaffle_shop.sql
 ~~~
