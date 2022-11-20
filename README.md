@@ -2,9 +2,11 @@
 # Lakehouse Analytics 
 ## Snowflake, Redshift, BigQuery, dbt, etc
 
+### Przygotowanie dbt
 ~~~
-python3 -m  venv dbt-snowflake-venv
-source dbt-snowflake-venv/bin/activate
+cd dbt
+python3 -m venv venv-dbt
+source venv-dbt/bin/activate
 
 pip list
 pip install -r requirements.txt
@@ -13,6 +15,7 @@ pip list | grep dbt
 dbt --version
 ~~~
 
+### SnowSQL
 ~~~
 snowsql -v
 snowsql -a <account_name> -u <login_name>
