@@ -8,5 +8,12 @@ source dbt-snowflake-venv/bin/activate
 
 pip list
 pip install -r requirements.txt
-pip list
+pip list | grep dbt
+
+dbt --version
+~~~
+
+~~~
+snowsql -v
+snowsql -a <account_name> -u <login_name>
 ~~~
