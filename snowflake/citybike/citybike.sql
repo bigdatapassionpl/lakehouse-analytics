@@ -100,7 +100,7 @@ create table trips_dev clone trips;
 
 
 
-
+drop database if exists weather;
 create database weather;
 use database weather;
 use schema public;
@@ -159,10 +159,10 @@ group by 1 order by 2 desc;
 
 -- undrop table
 drop table json_weather_data;
-
-select * from json_weather_data limit 10;
+-- select * from json_weather_data limit 10;
 
 undrop table json_weather_data;
+select * from json_weather_data limit 10;
 
 
 -- roll back a table
