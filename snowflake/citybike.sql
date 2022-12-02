@@ -14,7 +14,21 @@ limit 10;
 
 with trips as(
             select
-                *
+                tripduration
+                ,starttime
+                ,stoptime
+                ,start_station_id
+                --,START_STATION_NAME
+                --,start_station_latitude
+                ,start_station_longtitude
+                ,end_station_latitude
+                ,end_station_longtitude
+                ,end_station_id
+                ,end_station_name
+                ,bike_id
+                ,usertype
+                ,birth_year
+            ,gender
         from
             "SNOWFLAKE_WAREHOUSE"."CITIBIKE"."TRIPS"
         where starttime between '2018-06-01' and '2018-07-01'
