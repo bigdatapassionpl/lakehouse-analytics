@@ -12,6 +12,67 @@ where starttime between '2018-06-01' and '2018-07-01'
 limit 10;
 
 
+create or replace view trips_weather as(
+with trips as (
+select
+    tripduration
+    ,start_station_id
+    ,start_station_name
+    ,start_station_latitude
+    ,start_station_longitude
+    ,end_station_id
+    ,end_station_name
+    ,end_station_latitude
+    ,end_station_longitude
+    ,starttime
+    ,stoptime
+    ,usertype
+    ,gender
+    ,birth_year
+    ,date_trunc('day',starttime) as start_date
+
+from
+    "CITIBIKE"."PUBLIC"."TRIPS"
+    where starttime between '2018-06-01' and '2018-07-01'
+            ),
+    weather as (
+    select
+       date_trunc('day',observation_time) as observation_date
+                ,temp_avg
+                ,temp_min
+                ,temp_max
+                ,weather
+                ,wind_speed
+            from "CITIBIKE"."PUBLIC"."JSON_WEATHER_DATA_VIEW"
+            where observation_time between '2018-06-01' and '2018-07-01'
+                )
+select
+    tripduration
+    ,start_station_id
+    ,start_station_name
+    ,start_station_latitude
+    ,start_station_longitude
+    ,end_station_id
+    ,end_station_name
+    ,end_station_latitude
+    ,end_station_longitude
+    ,starttime
+    ,start_date
+    ,stoptime
+    ,usertype
+    ,gender
+    ,birth_year
+    ,temp_avg
+                ,temp_min
+                ,temp_max
+                ,weather
+                ,wind_speed
+                ,observation_date
+    from trips
+    left join weather on start_date=observation_date
+  );
+
+
 with trips as(
             select
                 tripduration
