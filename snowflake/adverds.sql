@@ -15,7 +15,7 @@ limit 10;
 select usercookie, count(1) as numberofimpressions
 from impressions
 group by usercookie
-order by numberofimpressions desc"SNOWFLAKE_WAREHOUSE"."PUBLIC"."CLICKS"
+order by numberofimpressions desc
 limit 10;
 
 
