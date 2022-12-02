@@ -1,7 +1,6 @@
 
-USE DATABASE "SNOWFLAKE_WAREHOUSE";
-use schema "CITIBIKE";
 
+select count(*) from trips;
 select count(*) from stations;
 
 describe table stations;

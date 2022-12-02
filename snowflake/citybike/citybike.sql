@@ -1,15 +1,12 @@
+use role sysadmin;
 
+drop database if exists citibike;
+create database citibike;
 
--- This SQL file is for the Hands On Lab Guide for the 30-day free Snowflake trial account
--- The numbers below correspond to the sections of the Lab Guide in which SQL is to be run in a Snowflake worksheet
--- Modules 1 and 2 of the Lab Guide have no SQL to execute
+use database citibike;
+use schema public;
 
-
-/* *********************************************************************************** */
-/* *** MODULE 3  ********************************************************************* */
-/* *********************************************************************************** */
-
--- 3.1.4
+-- creating table for data
 
 create table trips
 (tripduration integer,
@@ -29,15 +26,15 @@ create table trips
   birth_year integer,
   gender integer);
 
--- 3.2
+-- creating stage
 
-create or replace stage citibike_trips url = 's3://snowflake-workshop-lab/citibike-trips';
+create or replace stage citibike_trips url = 's3://snowflake-workshop-lab/citibike-trips-csv/';
 
--- 3.2.4
+show stages;
 
 list @citibike_trips;
 
--- 3.3
+-- creating file format
 
 create or replace file format csv type='csv'
   compression = 'auto' field_delimiter = ',' record_delimiter = '\n'
@@ -45,61 +42,51 @@ create or replace file format csv type='csv'
   error_on_column_count_mismatch = false escape = 'none' escape_unenclosed_field = '\134'
   date_format = 'auto' timestamp_format = 'auto' null_if = ('');
 
-/* *********************************************************************************** */
-/* *** MODULE 4  ********************************************************************* */
-/* *********************************************************************************** */
+show file formats in database citibike;
 
--- 4.2.2
+describe file format csv;
+
+
+-- create warehouse
+
+create or replace warehouse analytics_wh with warehouse_size = 'small' warehouse_type = 'standard'
+  auto_suspend = 10 auto_resume = true;
+
+show warehouses;
+
+use warehouse analytics_wh;
+
+
+
+-- loading data
 
 copy into trips from @citibike_trips file_format=csv;
-
--- 4.2.4
+select count(*) from trips;
 
 truncate table trips;
-
--- 4.2.7
-
+select count(*) from trips;
+alter warehouse compute_wh set warehouse_size='large';
 copy into trips from @citibike_trips file_format=csv;
 
--- 4.3
 
-create or replace warehouse analytics_wh with warehouse_size = 'large' warehouse_type = 'standard'
-  auto_suspend = 600 auto_resume = true;
 
-/* *********************************************************************************** */
-/* *** MODULE 5  ********************************************************************* */
-/* *********************************************************************************** */
-
--- 5.1.1
-
-use role sysadmin;
-use warehouse analytics_wh;
-use database citibike;
-use schema public;
-
--- 5.1.2
 
 select * from trips limit 20;
 
--- 5.1.3
+
 
 select date_trunc('hour', starttime) as "date",
 count(*) as "num trips",
 avg(tripduration)/60 as "avg duration (mins)",
 avg(haversine(start_station_latitude, start_station_longitude, end_station_latitude, end_station_longitude)) as "avg distance (km)"
 from trips
-group by 1 order by 1;
+group by 1 order by 1
+limit 1000;
 
--- 5.1.4
+ALTER SESSION SET USE_CACHED_RESULT = FALSE;
+ALTER SESSION SET USE_CACHED_RESULT = TRUE;
 
-select date_trunc('hour', starttime) as "date",
-count(*) as "num trips",
-avg(tripduration)/60 as "avg duration (mins)",
-avg(haversine(start_station_latitude, start_station_longitude, end_station_latitude, end_station_longitude)) as "avg distance (km)"
-from trips
-group by 1 order by 1;
 
--- 5.1.5
 
 select monthname(starttime) as "month",
     count(*) as "num trips"
@@ -107,48 +94,32 @@ from trips
 group by 1 order by 2 desc;
 
 
--- 5.2.1
 
+-- cloning table
 create table trips_dev clone trips;
 
-/* *********************************************************************************** */
-/* *** MODULE 6  ********************************************************************* */
-/* *********************************************************************************** */
 
--- 6.1.1
+
 
 create database weather;
-
--- 6.1.2
-
-use role sysadmin;
-use warehouse compute_wh;
 use database weather;
 use schema public;
 
--- 6.1.3
 
 create table json_weather_data (v variant);
 
--- 6.2.1
-
 create stage nyc_weather url = 's3://snowflake-workshop-lab/weather-nyc';
-
--- 6.2.2
 
 list @nyc_weather;
 
--- 6.3.1
 
 copy into json_weather_data
 from @nyc_weather
 file_format = (type=json);
 
--- 6.3.2
 
 select * from json_weather_data limit 10;
 
--- 6.4.1
 
 create view json_weather_data_view as
 select
@@ -170,13 +141,11 @@ select
 from json_weather_data
 where city_id = 5128638;
 
--- 6.4.4
 
 select * from json_weather_data_view
 where date_trunc('month',observation_time) = '2018-01-01'
 limit 20;
 
--- 6.5.1
 
 select weather as conditions
     ,count(*) as num_trips
@@ -187,32 +156,20 @@ where conditions is not null
 group by 1 order by 2 desc;
 
 
-/* *********************************************************************************** */
-/* *** MODULE 7  ********************************************************************* */
-/* *********************************************************************************** */
 
--- 7.1.1
-
+-- undrop table
 drop table json_weather_data;
-
--- 7.1.2
 
 select * from json_weather_data limit 10;
 
--- 7.1.3
-
 undrop table json_weather_data;
 
--- 7.2.1
 
+-- roll back a table
 use database citibike;
 use schema public;
 
--- 7.2.2
-
 update trips set start_station_name = 'oops';
-
--- 7.2.3
 
 select start_station_name as station
     ,count(*) as rides
@@ -221,19 +178,13 @@ group by 1
 order by 2 desc
 limit 20;
 
-
--- 7.2.4
-
 set query_id =
 (select query_id from
 table(information_schema.query_history_by_session (result_limit=>5))
 where query_text like 'update%' order by start_time limit 1);
 
--- 7.2.5
 create or replace table trips as
 (select * from trips before (statement => $query_id));
-
--- 7.2.6
 
 select start_station_name as "station"
     ,count(*) as "rides"
@@ -243,35 +194,34 @@ order by 2 desc
 limit 20;
 
 
-/* *********************************************************************************** */
-/* *** MODULE 8  ********************************************************************* */
-/* *********************************************************************************** */
-
--- 8.1.1
 
 use role accountadmin;
-
--- 8.1.3 (NOTE - enter your unique user name into the second row below)
-
+drop role if exists junior_dba;
 create role junior_dba;
-grant role junior_dba to user radoslawszmit;--YOUR_USER_NAME_GOES HERE;
 
--- 8.1.4
+select current_user(); --your name in next query
+grant role junior_dba to user radoslawszmit;
 
-use role junior_dba;
-
--- 8.1.6
+-- use role junior_dba;
+-- select * from trips limit 10;
 
 use role accountadmin;
+
 grant usage on database citibike to role junior_dba;
-grant usage on future schemas in database citibike to junior_dba;
-//grant usage on database weather to role junior_dba;
+grant usage on database weather to role junior_dba;
 
-grant usage, monitor on database citibike to role junior_dba;
-grant usage, monitor on all schemas in database citibike to role junior_dba;
+grant usage on all schemas in database citibike to role junior_dba;
+grant usage on all schemas in database weather to role junior_dba;
+
 grant select on all tables in database citibike to role junior_dba;
+grant select on all tables in database weather to role junior_dba;
 
--- 8.1.7
+grant usage on warehouse analytics_wh to role junior_dba;
+
 
 use role junior_dba;
+use database citibike;
+use schema public;
+use warehouse analytics_wh;
+select * from trips limit 10;
 
