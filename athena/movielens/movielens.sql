@@ -26,6 +26,7 @@ select * from movielens.movies limit 10;
 --- Ratings
 
 DROP TABLE IF EXISTS movielens.ratings;
+
 CREATE EXTERNAL TABLE IF NOT EXISTS movielens.ratings (
   `userid` int,
   `movieid` int,
@@ -49,10 +50,10 @@ select * from movielens.ratings limit 10;
 DROP TABLE IF EXISTS movielens.tags;
 
 CREATE EXTERNAL TABLE IF NOT EXISTS movielens.tags (
-  `userid` int,
-  `movieid` int,
-  `tag` string,
-  `time` int
+  userid int,
+  movieid int,
+  tag string,
+  time int
 )
 ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe'
 WITH SERDEPROPERTIES (
