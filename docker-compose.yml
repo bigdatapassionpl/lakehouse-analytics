@@ -4,11 +4,14 @@ services:
 
   jupyterlab-dataops:
     container_name: jupyterlab-dataops
-    image: gcr.io/getindata-images-public/jupyterlab-dataops:latest
+    image: gcr.io/getindata-images-public/jupyterlab-dataops:jupyterhub-1.5.0
     volumes:
     - ./:/home/jovyan/projects/lakehouse-analytics/:rw
+    - ~/.dbt/profiles.yml:/home/jovyan/.dbt/profiles.yml:r
+#    - ~/.snowsql/config:/home/jovyan/.snowsql/config:rw
     ports:
     - "8888:8888"
     stdin_open: true
     tty: true
     hostname: localhost
+    user: root

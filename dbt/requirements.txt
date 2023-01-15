@@ -1,5 +1,1 @@
 dbt-snowflake
-dbt-bigquery
-dbt-redshift
-dbt-trino
-dbt-databricks
