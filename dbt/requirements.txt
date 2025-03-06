@@ -1,1 +1,6 @@
-dbt-snowflake
+dbt-snowflake==1.8.4
+
+astronomer-cosmos==1.8.1
+astronomer-cosmos[dbt-bigquery,gcp-cloud-run-job]==1.8.1
+
+apache-airflow-providers-snowflake==6.0.0
