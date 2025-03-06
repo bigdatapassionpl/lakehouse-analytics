@@ -1,0 +1,13 @@
+jaffle_shop:
+  outputs:
+    dev:
+      account: '{{ env_var(''SNOWFLAKE_ACCOUNT'') }}'
+      database: DBT_ANALYTICS
+      password: '{{ env_var(''SNOWFLAKE_PASSWORD'') }}'
+      role: DBT_ROLE
+      schema: PUBLIC
+      threads: 1
+      type: snowflake
+      user: DBT_USER
+      warehouse: DBT_WH
+  target: dev
