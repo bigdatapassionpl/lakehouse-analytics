@@ -6,7 +6,7 @@ create or replace warehouse dbt_wh
     auto_suspend=10
     initially_suspended=true;
 
-create role dbt_role;
+create role if not exists dbt_role;
 
 create or replace user dbt_user
     password='*****************'
