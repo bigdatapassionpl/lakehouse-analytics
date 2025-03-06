@@ -7,3 +7,5 @@
 
 venv-dbt
 dbt.log
+
+__pycache__
