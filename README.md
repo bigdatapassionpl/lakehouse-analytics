@@ -5,14 +5,19 @@
 ### Przygotowanie dbt
 ~~~shell
 cd dbt
+rm -rf venv-dbt
 python3 -m venv venv-dbt
+python3.11 -m venv venv-dbt
 source venv-dbt/bin/activate
 
 pip list
 pip install -r requirements.txt
 pip list | grep dbt
 
+python --version
 dbt --version
+
+deactivate
 ~~~
 
 ### SnowSQL
