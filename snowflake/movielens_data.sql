@@ -26,8 +26,8 @@ file_format = (
   skip_header = 0
 );
 
-select * from ratings limit 10;
-select count(*) from ratings;
+select * from movies limit 10;
+select count(*) from movies;
 
 --- RATINGS
 
