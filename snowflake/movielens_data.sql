@@ -1,8 +1,14 @@
-
+drop database if exists movielens;
 create database if not exists movielens;
+
+-- create schema radek;
+-- use schema radek;
+-- drop schema radek;
 
 use database movielens;
 use schema public;
+use warehouse COMPUTE_WH;
+use role accountadmin;
 
 show tables;
 
