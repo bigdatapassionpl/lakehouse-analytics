@@ -1,7 +1,9 @@
-USE DATABASE "SNOWFLAKE_WAREHOUSE";
-use schema snowflake_warehouse.public;
+use database snowflake_sample_data;
+use schema snowflake_sample_data.tpch_sf1000;
+
 
 ALTER SESSION SET USE_CACHED_RESULT = FALSE;
+
 
 SELECT avg(o_totalprice), max(o_orderdate), min(o_orderdate)
 FROM ORDERS;
@@ -12,6 +14,7 @@ FROM ORDERS;
 SELECT distinct o_orderpriority
 FROM ORDERS;
 
+
 -- top 10 clients by value
 SELECT sum(o_totalprice) as totalpricesum, count(1) as numberoforders, o.o_custkey
 FROM ORDERS o
@@ -19,6 +22,7 @@ left join customer c on c.c_custkey = o.o_custkey
 group by o_custkey
 order by totalpricesum desc
 limit 10;
+
 
 -- better query and performance
 select t1.totalpricesum, numberoforders, c.c_name, c.c_custkey
