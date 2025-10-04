@@ -1,9 +1,35 @@
 use database snowflake_sample_data;
 use schema snowflake_sample_data.tpch_sf1000;
+use role ACCOUNTADMIN;
 
+-- WAREHOUSE
+SHOW WAREHOUSES;
 
+CREATE WAREHOUSE power_warehouse
+WITH WAREHOUSE_SIZE = 'MEDIUM'
+AUTO_SUSPEND = 300
+AUTO_RESUME = TRUE;
+
+use warehouse power_warehouse;
+
+ALTER WAREHOUSE power_warehouse RESUME;
+ALTER WAREHOUSE power_warehouse SUSPEND;
+
+ALTER WAREHOUSE power_warehouse SET WAREHOUSE_SIZE = 'X-SMALL'; -- min
+ALTER WAREHOUSE power_warehouse SET WAREHOUSE_SIZE = 'SMALL';
+ALTER WAREHOUSE power_warehouse SET WAREHOUSE_SIZE = 'MEDIUM';
+ALTER WAREHOUSE power_warehouse SET WAREHOUSE_SIZE = 'LARGE';
+ALTER WAREHOUSE power_warehouse SET WAREHOUSE_SIZE = 'X-LARGE';
+ALTER WAREHOUSE power_warehouse SET WAREHOUSE_SIZE = '6X-LARGE'; -- max
+
+SHOW WAREHOUSES;
+
+ALTER SESSION SET USE_CACHED_RESULT = TRUE;
 ALTER SESSION SET USE_CACHED_RESULT = FALSE;
 
+
+
+-- Queries
 
 SELECT avg(o_totalprice), max(o_orderdate), min(o_orderdate)
 FROM ORDERS;
@@ -146,4 +172,3 @@ FROM "PUBLIC"."LINEITEM" l
 where r.r_regionkey != r2.r_regionkey
 
 LIMIT 10;
-
