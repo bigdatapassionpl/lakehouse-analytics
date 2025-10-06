@@ -3,28 +3,16 @@ PyIceberg script to read table from Databricks using Unity Catalog
 """
 from pyiceberg.catalog import load_catalog
 import pyarrow as pa
-import configparser
+import yaml
 import os
 
-# Read Databricks configuration from ~/.databrickscfg
-config = configparser.ConfigParser()
-config_path = os.path.expanduser("~/.databrickscfg")
-config.read(config_path)
-
-# Use DEFAULT profile or specify another profile
-profile = "DEFAULT"
-host = config[profile]["host"]
-token = config[profile]["token"]
+# Load catalog configuration from YAML file
+config_path = os.path.expanduser("~/.snowflake/catalog_config.yaml")
+with open(config_path, 'r') as f:
+    config = yaml.safe_load(f)
 
 # Configure Databricks Unity Catalog connection
-catalog = load_catalog(
-    "databricks",
-    **{
-        "type": "rest",
-        "uri": f"{host}/api/2.1/unity-catalog/iceberg",
-        "token": token,
-    }
-)
+catalog = load_catalog("databricks", **config["databricks"])
 
 # Specify the table in Unity Catalog format: catalog.schema.table
 table_name = "radek.default.customer"
