@@ -1,3 +1,4 @@
 pyiceberg[pyarrow]
 pyarrow
 pandas
+pyyaml
