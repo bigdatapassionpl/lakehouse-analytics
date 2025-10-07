@@ -29,7 +29,7 @@ config_name = sys.argv[1]
 table_name = sys.argv[2]
 
 # Load catalog configuration from YAML file
-config_path = os.path.expanduser("~/.snowflake/catalog_config.yaml")
+config_path = os.path.expanduser("~/catalog_config.yaml")
 with open(config_path, 'r') as f:
     config = yaml.safe_load(f)
 
