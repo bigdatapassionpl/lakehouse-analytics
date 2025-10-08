@@ -6,12 +6,12 @@ databricks:
   type: rest
   uri: https://<workspace-id>.cloud.databricks.com/api/2.1/unity-catalog/iceberg
   token: <your-databricks-personal-access-token>
-  warehouse: <warehouse-id>
+  warehouse: <unity-catalog-name>
 
 # Snowflake Polaris / REST Catalog
 snowflake:
   type: rest
   uri: https://<account>.snowflakecomputing.com/polaris/api/catalog
   credential: <principal>:<secret>
-  warehouse: <warehouse-name>
+  warehouse: <polaris-catalog-name>
   scope: PRINCIPAL_ROLE:ALL
