@@ -14,3 +14,4 @@ snowflake:
   uri: https://<account>.snowflakecomputing.com/polaris/api/catalog
   credential: <principal>:<secret>
   warehouse: <warehouse-name>
+  scope: PRINCIPAL_ROLE:ALL
